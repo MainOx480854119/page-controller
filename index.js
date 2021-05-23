@@ -36,10 +36,9 @@ exports.ReactionController = class ReactionController {
     if(!this._collector) throw new CollectorError('Use the "sendTo" method, please register the Collector.')
     await this._collector.message.edit(page)
     this._currentPageNumber = pageNumber
-	const result = new Promise(async function(resolve){
+	return new Promise(async function(resolve){
     resolve(pageNumber)
 	  })
-	return result;
   }
 
   async prevPage(){
@@ -49,20 +48,19 @@ exports.ReactionController = class ReactionController {
     if(!this._collector) throw new CollectorError('Use the "sendTo" method, please register the Collector.')
     await this._collector.message.edit(page)
     this._currentPageNumber = pageNumber
-	const result = new Promise(async function(resolve){
+	return new Promise(async function(resolve){
     resolve(pageNumber)
 	  })
-	return result;
   }
 
-  async send(channel,sender){
+  async send(channel,options){
     const firstPageNumber = this.pages.firstKey()
 
     if (typeof firstPageNumber === "undefined") throw new Error('At least one page must be added using the "addPage" method.')
 
     const collectorFilter = (reaction, user) => {
       if(!this.handlers.has(reaction.emoji.identifier))return false
-      if(Array.isArray(sender))return sender
+      if(Array.isArray(sender))return options.sender
 	    .map(sender => sender.id)
         .includes(user.id)
       else if(sender)return user.id === sender.id
