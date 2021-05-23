@@ -13,7 +13,7 @@
   "author": "MainOx480854119",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^12.5.3",
+    "discord.js": "github:discordjs/discord.js#master",
     "node": "^16.1.0"
   }
 }
