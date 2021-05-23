@@ -1,7 +1,7 @@
 {
   "name": "controller",
   "version": "1.0.0",
-  "description": "discordjs-reaction-controllerを自分好みにjsで書き直したものです。",
+  "description": "InkoHX氏のdiscordjs-reaction-controllerを自分好みにjsで書き直したものです。",
   "main": "index.js",
   "scripts": {
     "start": "node test.js",

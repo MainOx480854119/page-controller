@@ -15,7 +15,7 @@ const util = require('util')
 const { CollectorError, PageNotFoundError } = require('./error')
 
 exports.ReactionController = class ReactionController {
-  constructor(client,...options){
+  constructor(client,options){
     this.client             = client
 	this.options            = options
 	this.pages              = new Collection()
@@ -55,7 +55,7 @@ exports.ReactionController = class ReactionController {
 	return result;
   }
 
-  async sendTo(channel,sender){
+  async send(channel,sender){
     const firstPageNumber = this.pages.firstKey()
 
     if (typeof firstPageNumber === "undefined") throw new Error('At least one page must be added using the "addPage" method.')
@@ -87,7 +87,11 @@ exports.ReactionController = class ReactionController {
 
     const collector = await this._resolvePage(firstPageNumber)
       .then(embed => channel.send(embed))
-      .then(message => message.createReactionCollector(collectorFilter, this.options))
+      .then(message => message.createReactionCollector(collectorFilter, {
+		  max:this.options?.max,
+		  maxEmojis:this.options?.maxEmojis,
+		  maxUsers:this.options?.maxUsers
+	  }))
       .then(collector => collector.on('collect', onCollect))
       .then(collector => collector.on('end', onEnd))
     this._collector = collector
@@ -104,7 +108,6 @@ exports.ReactionController = class ReactionController {
 
   addPage(page){
     this.pages.set(this.pages.size, page)
-	console.log(this.pages)
     return this
   }
 
@@ -129,7 +132,7 @@ exports.ReactionController = class ReactionController {
 
   _initReactionHandlers(){
     this
-      .addReactionHandler('◀️', (reaction, user) => {
+      .addReactionHandler(this.options?.prevEmoji ?? '◀️', (reaction, user) => {
         this.prevPage()
           .then(() => reaction.users.remove(user))
           .catch(reason => {
@@ -137,7 +140,7 @@ exports.ReactionController = class ReactionController {
             else console.error(reason)
           })
       })
-      .addReactionHandler('▶️', (reaction, user) => {
+      .addReactionHandler(this.options?.nextEmoji ?? '▶️', (reaction, user) => {
         this.nextPage()
           .then(() => reaction.users.remove(user))
           .catch(reason => {
@@ -145,12 +148,15 @@ exports.ReactionController = class ReactionController {
             else console.error(reason)
           })
       })
-      .addReactionHandler('⏹️', (reaction) => {
-        this._collector?.stop()
-        this._collector = null
-
-        reaction.message.reactions.removeAll()
+	  if(this.options?.stopButton!==false){
+		  this
+		  .addReactionHandler(this.options?.stopEmoji ?? '⏹️', (reaction) => {
+			  this._collector?.stop()
+			  this._collector = null
+			  
+			  reaction.message.reactions.removeAll()
           .catch(console.error)
-      })
+		  })
+	  }
   }
 }
