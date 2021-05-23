@@ -60,7 +60,7 @@ exports.ReactionController = class ReactionController {
 
     const collectorFilter = (reaction, user) => {
       if(!this.handlers.has(reaction.emoji.identifier))return false
-      if(Array.isArray(sender))return options.sender
+      if(Array.isArray(options.sender))return options.sender
 	    .map(sender => sender.id)
         .includes(user.id)
       else if(sender)return user.id === sender.id
