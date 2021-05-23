@@ -1,10 +1,10 @@
 {
-  "name": "controller",
+  "name": "page-controller",
   "version": "1.0.0",
   "description": "InkoHX氏のdiscordjs-reaction-controllerを自分好みにjsで書き直したものです。",
-  "main": "index.js",
+  "main": "node index.js",
   "scripts": {
-    "start": "node test.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peerDependencies": {

@@ -1,15 +1,6 @@
 const {
-  Client,
   Collection,
-  EmojiResolvable,
-  GuildMember,
-  Message,
-  MessageEmbed,
-  MessageReaction,
-  PartialTextBasedChannelFields,
   ReactionCollector,
-  ReactionCollectorOptions,
-  User
 } = require('discord.js')
 const util = require('util')
 const { CollectorError, PageNotFoundError } = require('./error')
@@ -79,9 +70,7 @@ exports.ReactionController = class ReactionController {
       throw new Error('Reaction Handler not found.')
     }
 
-    const onEnd = () => {
-		this._collector?.message.reactions.removeAll().catch(console.error)
-	}
+    const onEnd = () => this._collector?.message.reactions.removeAll().catch(console.error);
 
     const collector = await this._resolvePage(firstPageNumber)
       .then(embed => channel.send(embed))
