@@ -69,9 +69,11 @@ exports.ReactionController = class ReactionController {
 
       throw new Error('Reaction Handler not found.')
     }
-
-    const onEnd = () => this._collector?.message.reactions.removeAll().catch(console.error);
-
+    
+    if(this._collector){
+    const onEnd = () => this._collector.message.reactions.removeAll().catch(console.error);
+    }
+	  
     const collector = await this._resolvePage(firstPageNumber)
       .then(embed => channel.send(embed))
       .then(message => message.createReactionCollector(collectorFilter, {
