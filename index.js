@@ -71,7 +71,9 @@ exports.ReactionController = class ReactionController {
     }
     
     if(this._collector){
-    const onEnd = () => this._collector.message.reactions.removeAll().catch(console.error);
+    var onEnd = () => this._collector.message.reactions.removeAll().catch(console.error);
+    } else {
+    var onEnd = () => undefined
     }
 	  
     const collector = await this._resolvePage(firstPageNumber)
